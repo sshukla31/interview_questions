@@ -23,19 +23,15 @@ a?b?c:d:e to
 
 Algorithm:
 1) Create root node and push to stack
-2) Create a variable last char to remember ? or :
+2) Iterate over the expresssion with 2 steps. Hence, the possible options are ? or :
 2) Check of expression ? or :
-3) If expression is '?', save last char and then go to the next char
-4) When last char is
+4) Depending upon the operator, perform following options,
     ?  - then assign the new node to left of the node on the stack
     :  - then pop the top of the stack as it's a sibling, then pop the stack until
          we find a node whose right child is None. Assign the new node as right child
          of this stack node whose right child is None
 5) Push the node
 
-
-I have used last_char because I was not finding an easy way to for loop with
-2 steps and get the index number so as to directly access the element
 '''
 
 
@@ -56,7 +52,8 @@ def inorder_tree(node, result):
 
 
 
-def ternary_to_binary_tree(expression):
+def ternary_to_binary_tree_2(expression):
+    """ Read every character and create Tree """
     stack = Stack()
     root = Node(expression[0])
     stack.push(root)
@@ -81,10 +78,34 @@ def ternary_to_binary_tree(expression):
 
     return root
 
+def ternary_to_binary_tree(expression):
+    """ Convert ternary expression to Binary Tree """
+    stack = Stack()
+    root = Node(expression[0])
+    stack.push(root)
+
+    for index in range(1, len(expression), 2):
+        operator = expression[index]
+        next_char = expression[index + 1]
+        node = Node(next_char)
+        if operator == "?":
+            stack.peek().left = node
+
+        if operator == ':':
+            stack.pop()
+            while(stack.peek().right != None):
+                stack.pop()
+            stack.peek().right = node
+
+
+        stack.push(node)
+
+    return root
+
 if __name__ == '__main__':
-    test = "a?b?c?:d:e"
+    test = "a?b?c:d:e"
     root_node = ternary_to_binary_tree(test)
-    expected_result = ['c', 'b', 'd', 'e', 'a']
+    expected_result = ['c', 'b', 'd', 'a', 'e']
     actual_result = []
     inorder_tree(node=root_node, result=actual_result)
     print expected_result

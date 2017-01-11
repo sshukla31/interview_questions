@@ -18,7 +18,7 @@ class TestListElements(unittest.TestCase):
 
     def test_expression1(self):
         """Test the expression using in-order traversal """
-        expression = "a?b?c?:d:e"
+        expression = "a?b?c:d:e"
         root_node = ternary_to_bt.ternary_to_binary_tree(expression)
         expected_result = ['c', 'b', 'd', 'a', 'e']
         actual_result = []
