@@ -89,9 +89,13 @@ def ternary_to_binary_tree(expression):
         next_char = expression[index + 1]
         node = Node(next_char)
         if operator == "?":
+            # '?' indicates left child of the root
             stack.peek().left = node
 
         if operator == ':':
+            # ':' indicates right child of the root
+            # pop out the sibling and add node to the parent's(stack top element)
+            # right most child which is on top of the stach
             stack.pop()
             while(stack.peek().right != None):
                 stack.pop()
