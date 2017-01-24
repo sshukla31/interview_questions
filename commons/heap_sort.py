@@ -62,13 +62,14 @@ class BinaryHeap(object):
             index = parent_index
 
     def delete_max(self):
+        result = None
         if self.size == 0:
-            return -1
+            result = -1
         elif self.size == 1:
-            self.heap.pop()
+            result = self.heap.pop()
         elif self.size == 2:
             self.heap[0] = self.heap[-1]
-            self.heap.pop()
+            result = self.heap.pop()
         else:
             # we can simply assign heap[0] = heap[-1] and pop()
             # but here we follow regular step
@@ -76,12 +77,13 @@ class BinaryHeap(object):
             self.heap[0] = self.heap[-1]
             self.heap[-1] = tmp
 
-            self.heap.pop()
-
-            self.heapify()
-
+            result = self.heap.pop()
+            self.size = len(self.heap) # update size before percolate
+            self.percolate_down(index=0)
 
         self.size = len(self.heap)
+
+        return result
 
     def build_max_heap(self, array):
         self.size = len(array) - 1
@@ -114,19 +116,49 @@ class BinaryHeap(object):
         else:
             return self.right_children(index)
 
+    def sort(self, unsorted_elements):
+        if len(unsorted_elements) in [0, 1, 2]:
+            return unsorted_elements
+        else:
+            heap_size = self.size - 1
+            for index in range(heap_size, 0, -1):
+                self.heap[index], self.heap[0] = self.heap[0], self.heap[index]
+                self.size  -= 1
+                self.percolate_down(0)
+                print self.heap
 
-    #def heapify(self, elements=None):
-    #    elements = elements if elements else self.heap
-    #    start = (len(elements) - 1) / 2
-    #    for index in range(start , -1 , -1):
-    #        parent_index = self.parent(index)
-    #        if elements[parent_index] < elements[index]:
-    #            tmp = elements[index]
-    #            elements[index] = elements[parent_index]
-    #            elements[parent_index] = tmp
+            #index_tmp = -1
+            #print self.heap
+            #while(self.size >= 0):
+            #    tmp = self.heap[0]
+            #    self.heap[0] = self.heap[index_tmp]
+            #    self.heap[index_tmp] = tmp
+            #    print self.heap[index_tmp]
+            #    print self.size
+            #    self.size -= 1
+            #    index_tmp -= 1
+            #    self.percolate_down(index=0)
 
-    #def sort(self, unsorted_elements):
-    #    pass
+    def find_min_in_max_heap(self):
+        """
+        Find last parent using formula last_parent=(index - 1)//2, where index=len(array).
+        Then after last_parent, all the consecutive number in the array will be leaf nodes.
+        So, (last_parent + 1) is our first leaf node. Hence, simply traverse the array starting from
+        first leaf node to end of an array to get MIN
+        """
+        min_number = None
+        last_parent = (self.size - 1) // 2
+        first_leaf = last_parent + 1
+        # Shortcut to find first_leaf:
+        #  (self.size - 1) //2 + 1  = (self.size + 1) // 2
+        # But for simplicity, we will use variable first_leaf in steps
+        for index in range(first_leaf, self.size):
+            if min_number is None:
+                min_number = self.heap[index]
+            else:
+                min_number = min(min_number, self.heap[index])
+
+        return min_number
 
 
 if __name__ == '__main__':
@@ -152,3 +184,28 @@ if __name__ == '__main__':
     actual_heap = binary_heap.heap
     expected_heap = [11, 8, 10, 7, 5, 9, 0, 1, 4, 2, 5, 3, 6]
     assert actual_heap == expected_heap
+
+    print "\n################"
+    print "#  DELETE MAX    #"
+    print "################\n"
+    val = binary_heap.delete_max()
+    print val
+    assert val == 11
+
+    val = binary_heap.delete_max()
+    print val
+    assert val == 10
+
+
+    print "\n###################"
+    print "#  FIND MIN IN MAX  #"
+    print "####################\n"
+
+    print binary_heap.find_min_in_max_heap()
+
+
+    print "\n#########################"
+    print "#  HEAP SORT: NOT WORKING  #"
+    print "###########################\n"
+    unsorted_elements = binary_heap.heap
+    binary_heap.sort(unsorted_elements)
