@@ -14,7 +14,7 @@ def merge(left, right, sorted_array):
     #   1. [left[i] < right[j] and i < len(left)], then, copy from left[i] to sorted_array[i+j]
     #   2. pointer j has reached end. (j == len(right)), then, copy remaining element of left array to sorted_array
     # B) Cases when we copy from right[j] to sorted_array[i+j]
-    #   3. left[i] < right[j], then, copy from right[j] to sorted_array [i+j]
+    #   3. left[i] > right[j], then, copy from right[j] to sorted_array [i+j]
     #   4. pointer i has reached end. (i == len(left)), then, copy remaining element of right array to sorted_array
 
 
