@@ -71,11 +71,11 @@ def quick_select(l, k, pivot_func):
             pivots.append(num)
 
     if k < len(lows):
-        quick_select(lows, k, pivot_func)
+        return quick_select(lows, k, pivot_func)
     elif k < (len(lows) + len(pivots)):
         return pivots[0]
     else:
-        quick_select(highs, k - (len(lows) + len(pivots)), pivot_func)
+        return quick_select(highs, k - (len(lows) + len(pivots)), pivot_func)
 
 
 
@@ -84,4 +84,9 @@ if __name__ == '__main__':
     l = [9,1,0,2,3,4,6,8,7,10,5]
     actual_result = find_median(l)
     expected_result = 5
+    assert actual_result == expected_result
+
+    l = [3,2,1,5,6,4]
+    actual_result = find_median(l)
+    expected_result = 3.5
     assert actual_result == expected_result
